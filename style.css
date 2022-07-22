@@ -1,0 +1,48 @@
+html, body {
+    background-color: #f2f2f2;
+}
+
+canvas {
+    margin-left: 200px;
+    background-color: #49b293;
+    /*transform: rotateX(55deg) rotateZ(45deg);*/
+}
+
+/*table {
+    text-align: center;
+    border-collapse: collapse;
+    background-color: #49b293;
+    width: 1200px;
+    height: 1200px;
+    table-layout: fixed;
+    transform: rotateX(55deg) rotateY(0deg) rotateZ(45deg);
+}
+
+tr {
+    height: 6.66666667% !important;
+}
+
+td {
+    border: 2px solid black;
+}
+
+img {
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(-45deg);
+}*/
+
+img {
+    display: block;
+    max-height: 40px;
+    max-width: 100%;
+    transform: rotateZ(55deg);
+}
+
+.main {
+    transform: rotateX(0) rotateY(0) rotateZ(0);
+    width: auto;
+    height: auto;
+}
+
+#temp {
+    white-space: pre;
+}
