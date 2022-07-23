@@ -7,22 +7,19 @@
     <body>
         <p id="temp"></p>
 
-        <canvas id="myCanvas" width="1700" height="1000"></canvas>
-        <button id="addHouse" onclick="addHouseNew()">Add House</button>
-        <button id="makeBlue" onclick="makeBlue()">Make Blue</button>
+        <canvas id="myCanvas" width="1664" height="960"></canvas>
+        <button id="addHouse" onclick="addHouse()">Add House</button>
     </body>
 
     <script>
         var imgHouse = new Image();
-        var imgHouse2 = new Image();
         var imgHorizontalRoad = new Image();
         var imgVerticalRoad = new Image();
         var imgTopRightRoad = new Image();
         var imgBottomRightRoad = new Image();
         var imgTopLeftRoad = new Image();
         var imgBottomLeftRoad = new Image();
-        imgHouse.src = "assets/house.png";
-        imgHouse2.src = "assets/house2.png";
+        imgHouse.src = "assets/house2.png";
         imgHorizontalRoad.src = "assets/roads/horizontalRoad.png"; //1
         imgVerticalRoad.src = "assets/roads/verticalRoad.png"; //2
         imgTopRightRoad.src = "assets/roads/topRight.png"; //3
@@ -30,34 +27,22 @@
         imgTopLeftRoad.src = "assets/roads/topLeft.png"; //5
         imgBottomLeftRoad.src = "assets/roads/bottomLeft.png"; //6
 
-        {
-            var bw = 1700;
-            // Box height
-            var bh = 1000;
-            var canvas = document.getElementById("myCanvas");
-            var context = canvas.getContext("2d");
-            function drawBoard(){
-                context.lineWidth = 2;
-                context.strokeStyle = "rgb(0,0,0)";
-                for (var x = 0; x < bw; x += 64) {
-                    for (var y = 0; y < bh; y += 64) {
-                       context.strokeRect(x, y, 64, 64);
-                    }
-                }
-            }
-        }
-
-        drawBoard();
-
         var map = [
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,1,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0]
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         ];
 
         var c = document.getElementById("myCanvas");
@@ -73,41 +58,40 @@
 
         imgBottomLeftRoad.onload = function(){
             //ctx.drawImage(imgHorizontalRoad, 256, 256);
-            availableRoadTiles.push([1,2,1]);
-            availableRoadTiles.push([3,2,3]);
-            renderRoads();
+            availableRoadTiles.push([7,5,1]);
+            availableRoadTiles.push([9,5,3]);
+            renderMap();
         };
 
         function addRoad(){
             if(!availableRoadTiles.length) return;
-            console.log(availableRoadTiles.length);
             var tile = availableRoadTiles[Math.floor(Math.random() * availableRoadTiles.length)];
-            var road = Math.ceil(Math.random() * 3);
+            var roadRand = Math.ceil(Math.random() * 4);
             var roadType;
 
             if(tile[2] == 0) { //4, 2, 6
-                if(road == 1) roadType = 4;
-                else if(road == 2) roadType = 2;
-                else if(road == 3) roadType = 6;
+                if(roadRand == 1) roadType = 4;
+                else if(roadRand == 2) roadType = 6;
+                else roadType = 2;
             }
             else if(tile[2] == 1) { //1, 5, 6
-                if(road == 1) roadType = 1;
-                else if(road == 2) roadType = 5;
-                else if(road == 3) roadType = 6;
+                if(roadRand == 1) roadType = 5;
+                else if(roadRand == 2) roadType = 6;
+                else roadType = 1;
             }
             else if(tile[2] == 2) { //3, 5, 2
-                if(road == 1) roadType = 3;
-                else if(road == 2) roadType = 5;
-                else if(road == 3) roadType = 2;
+                if(roadRand == 1) roadType = 3;
+                else if(roadRand == 2) roadType = 5;
+                else roadType = 2;
             }
             else if(tile[2] == 3) { //1, 3, 4
-                if(road == 1) roadType = 1;
-                else if(road == 2) roadType = 3;
-                else if(road == 3) roadType = 4;
+                if(roadRand == 1) roadType = 3;
+                else if(roadRand == 2) roadType = 4;
+                else roadType = 1;
             }
 
             map[tile[1]][tile[0]] = roadType;
-            renderRoads();
+            renderMap();
             var index = availableRoadTiles.indexOf(tile);
             availableRoadTiles.splice(index, 1);
             var nextTile;
@@ -139,7 +123,21 @@
             if(nextTile) availableRoadTiles.push(nextTile);
         }
 
-        function renderRoads(){
+        function renderMap(){
+            ctx.clearRect(0,0,1664,960);
+            var bw = 1664;
+            // Box height
+            var bh = 960;
+            function drawBoard(){
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgb(0,0,0)";
+                for (var x = 0; x < bw; x += 64) {
+                    for (var y = 0; y < bh; y += 64) {
+                       ctx.strokeRect(x, y, 64, 64);
+                    }
+                }
+            }
+        drawBoard();
             for(var x=0;x<map[0].length;x++){
                 for(var y=0;y<map.length;y++){
                     if(map[y][x] == 1) ctx.drawImage(imgHorizontalRoad, x*64, y*64);
@@ -148,36 +146,23 @@
                     else if(map[y][x] == 4) ctx.drawImage(imgBottomRightRoad, x*64, y*64);
                     else if(map[y][x] == 5) ctx.drawImage(imgTopLeftRoad, x*64, y*64);
                     else if(map[y][x] == 6) ctx.drawImage(imgBottomLeftRoad, x*64, y*64);
-                    else if(map[y][x] == 7) ctx.drawImage(imgHouse2, x*64, y*64);
+                    else if(map[y][x] == 7) ctx.drawImage(imgHouse, x*64, y*64);
                 }
             }
         };
 
-        function addHouseNew(){
-            var x = Math.floor(Math.random() * 26.563); //column number
-            var y = Math.floor(Math.random() * 15.625); //row number
-            var rand = Math.ceil(Math.random() * 2);
-            if(rand == 1) ctx.drawImage(imgHouse, x*64+10, y*64+10);
-            else ctx.drawImage(imgHouse2, x*64+10, y*64+10);
-        }
-
-
         function addHouse(){
-            var cellRand = Math.ceil(Math.random() * 225);
-            var houseRand = Math.ceil(Math.random() * 3);
-            var blacksmithRand = Math.ceil(Math.random() * 2);
-            var buildingRand = Math.round(Math.random() * 20)
-            var file;
-            if(buildingRand != 1) file = "<img src='assets/Sprites/Buildings/house/Wood houses/Wood house/wood_house(${houseRand}).png'>";
-            else file = "<img src='assets/Sprites/Buildings/house/blacksmith_wood(${blacksmithRand}).png'>";
-            document.getElementById(`td${cellRand}`).innerHTML = eval("`"+file+"`");
+            var x = Math.floor(Math.random() * 25); //column number
+            var y = Math.floor(Math.random() * 14); //row number
+            console.log(x + ", " + y);
+            if(map[y][x] != 0) {
+                addHouse();
+                return;
+            }
+            else map[y][x] = 7;
+            renderMap();
         }
-
-        function makeBlue(){
-            var rand = Math.round(Math.random() * 100);
-            document.getElementById(`td${rand}`).style.backgroundColor = '#6e49b2';
-        }
-setInterval(function(){addRoad()}, 1000);
+        setInterval(function(){addRoad()}, 10);
     </script>
 </html>
 
