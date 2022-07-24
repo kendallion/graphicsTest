@@ -1,4 +1,6 @@
-var imgHouse = new Image();
+var imgSmallHouse = new Image();
+var imgLargeHouse = new Image();
+
 var imgHorizontalRoad = new Image();
 var imgVerticalRoad = new Image();
 var imgTopRightRoad = new Image();
@@ -18,7 +20,9 @@ var imgIntersectionBottomRoad = new Image();
 var imgIntersectionLeftRoad = new Image();
 var imgFourWayRoad = new Image();
 
-imgHouse.src = "assets/house2.png";
+imgSmallHouse.src = "assets/buildings/smallHouse.png";
+imgLargeHouse.src = "assets/buildings/largeHouse.png";
+
 imgHorizontalRoad.src = "assets/roads/horizontalRoad.png"; //1
 imgVerticalRoad.src = "assets/roads/verticalRoad.png"; //2
 imgTopRightRoad.src = "assets/roads/topRight.png"; //3
@@ -102,7 +106,8 @@ function renderMap(){
                 else if(roadType == 15) ctx.drawImage(imgFourWayRoad, x*64, y*64);
                 else ctx.drawImage(imgRoadEnd, x*64, y*64);
             }
-            else if(map[y][x] == 2) ctx.drawImage(imgHouse, x*64, y*64);
+            else if(map[y][x] == 2) ctx.drawImage(imgSmallHouse, x*64, y*64);
+            else if(map[y][x] == 3) ctx.drawImage(imgLargeHouse, x*64, y*64);
         }
     }
 }
@@ -129,10 +134,14 @@ function addRoadRandom(){
 function addHouse(){
     var randX = Math.floor(Math.random() * map[0].length);
     var randY = Math.floor(Math.random() * map.length);
+    var randHouse = Math.ceil(Math.random() * 2);
     if(map[randY][randX] != 0) {
         addHouse();
         return;
     }
-    else map[randY][randX] = 2;
+    else {
+        if(randHouse == 1) map[randY][randX] = 2;
+        else if(randHouse == 2) map[randY][randX] = 3;
+    }
     renderMap();
 }
