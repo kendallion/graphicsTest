@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Isometric Test</title>
+        <title>Graphics Test</title>
         <link rel="stylesheet" href="style.css" />
     </head>
 
@@ -19,6 +19,19 @@
         var imgBottomRightRoad = new Image();
         var imgTopLeftRoad = new Image();
         var imgBottomLeftRoad = new Image();
+
+        var imgRoadEndTop = new Image();
+        var imgRoadEndRight = new Image();
+        var imgRoadEndBottom = new Image();
+        var imgRoadEndLeft = new Image();
+        var imgRoadEnd = new Image();
+
+        var imgIntersectionTopRoad = new Image();
+        var imgIntersectionRightRoad = new Image();
+        var imgIntersectionBottomRoad = new Image();
+        var imgIntersectionLeftRoad = new Image();
+        var imgFourWayRoad = new Image();
+
         imgHouse.src = "assets/house2.png";
         imgHorizontalRoad.src = "assets/roads/horizontalRoad.png"; //1
         imgVerticalRoad.src = "assets/roads/verticalRoad.png"; //2
@@ -27,13 +40,30 @@
         imgTopLeftRoad.src = "assets/roads/topLeft.png"; //5
         imgBottomLeftRoad.src = "assets/roads/bottomLeft.png"; //6
 
+        imgRoadEndTop.src = "assets/roads/roadEndTop.png";
+        imgRoadEndRight.src = "assets/roads/roadEndRight.png";
+        imgRoadEndBottom.src = "assets/roads/roadEndBottom.png";
+        imgRoadEndLeft.src = "assets/roads/roadEndLeft.png";
+        imgRoadEnd.src = "assets/roads/roadEnd.png";
+
+        imgIntersectionTopRoad.src = "assets/roads/intersectionTop.png";
+        imgIntersectionRightRoad.src = "assets/roads/intersectionRight.png";
+        imgIntersectionBottomRoad.src = "assets/roads/intersectionBottom.png";
+        imgIntersectionLeftRoad.src = "assets/roads/intersectionLeft.png";
+        imgFourWayRoad.src = "assets/roads/fourWay.png";
+
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+        c.addEventListener('mousedown', function(e) {
+            addRoadWithCoords(c, e)
+        });
         var map = [
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -44,11 +74,85 @@
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         ];
+        function drawBoard(){
+            var bw = 1664;
+            var bh = 960;
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgb(0,0,0)";
+            for (var x = 0; x < bw; x += 64) {
+                for (var y = 0; y < bh; y += 64) {
+                   ctx.strokeRect(x, y, 64, 64);
+                }
+            }
+        }
+        renderMap();
 
-        var c = document.getElementById("myCanvas");
-        var ctx = c.getContext("2d");
+        function renderMap(){
+            ctx.clearRect(0,0,1664,960);
+            drawBoard();
+            for(var x=0;x<map[0].length;x++){
+                for(var y=0;y<map.length;y++){
+                    if(map[y][x] == 1){
+                        var roadType = 0;
+                        if(Array.isArray(map[y-1]) && map[y-1][x] == 1) roadType += 1;
+                        if(map[y][x+1] != undefined && map[y][x+1] == 1) roadType += 2;
+                        if(Array.isArray(map[y+1]) && map[y+1][x] == 1) roadType += 4;
+                        if(map[y][x-1] != undefined && map[y][x-1] == 1) roadType += 8;
 
-        var availableRoadTiles = [];
+                        if(roadType == 1) ctx.drawImage(imgRoadEndBottom, x*64, y*64);
+                        else if(roadType == 2) ctx.drawImage(imgRoadEndLeft, x*64, y*64);
+                        else if(roadType == 3) ctx.drawImage(imgBottomLeftRoad, x*64, y*64);
+                        else if(roadType == 4) ctx.drawImage(imgRoadEndTop, x*64, y*64);
+                        else if(roadType == 5) ctx.drawImage(imgVerticalRoad, x*64, y*64);
+                        else if(roadType == 6) ctx.drawImage(imgTopLeftRoad, x*64, y*64);
+                        else if(roadType == 7) ctx.drawImage(imgIntersectionLeftRoad, x*64, y*64);
+                        else if(roadType == 8) ctx.drawImage(imgRoadEndRight, x*64, y*64);
+                        else if(roadType == 9) ctx.drawImage(imgBottomRightRoad, x*64, y*64);
+                        else if(roadType == 10) ctx.drawImage(imgHorizontalRoad, x*64, y*64);
+                        else if(roadType == 11) ctx.drawImage(imgIntersectionBottomRoad, x*64, y*64);
+                        else if(roadType == 12) ctx.drawImage(imgTopRightRoad, x*64, y*64);
+                        else if(roadType == 13) ctx.drawImage(imgIntersectionRightRoad, x*64, y*64);
+                        else if(roadType == 14) ctx.drawImage(imgIntersectionTopRoad, x*64, y*64);
+                        else if(roadType == 15) ctx.drawImage(imgFourWayRoad, x*64, y*64);
+                        else ctx.drawImage(imgRoadEnd, x*64, y*64);
+                    }
+                    else if(map[y][x] == 2) ctx.drawImage(imgHouse, x*64, y*64);
+                }
+            }
+        }
+
+        function addRoadWithCoords(canvas, event) {
+            const rect = canvas.getBoundingClientRect()
+            const x = event.clientX - rect.left
+            const y = event.clientY - rect.top
+            map[Math.floor(y/64)][Math.floor(x/64)] = 1;
+            renderMap();
+        }
+
+        function addRoadRandom(){
+            var randX = Math.floor(Math.random() * map[0].length);
+            var randY = Math.floor(Math.random() * map.length);
+            if(map[randY][randX] != 0) {
+                addRoadRandom();
+                return;
+            }
+            map[randY][randX] = 1;
+            renderMap();
+        }
+
+        function addHouse(){
+            var randX = Math.floor(Math.random() * map[0].length);
+            var randY = Math.floor(Math.random() * map.length);
+            if(map[randY][randX] != 0) {
+                addHouse();
+                return;
+            }
+            else map[randY][randX] = 2;
+            renderMap();
+        }
+        /*
+
+        var availableRoadTiles2 = [];
         //STRUCTURE: [x, y, entryPoint]
         //ENTRY POINT:
             //0: from the top (of this tile)
@@ -58,14 +162,14 @@
 
         imgBottomLeftRoad.onload = function(){
             //ctx.drawImage(imgHorizontalRoad, 256, 256);
-            availableRoadTiles.push([7,5,1]);
-            availableRoadTiles.push([9,5,3]);
+            availableRoadTiles2.push([7,5,1]);
+            availableRoadTiles2.push([9,5,3]);
             renderMap();
         };
 
         function addRoad(){
-            if(!availableRoadTiles.length) return;
-            var tile = availableRoadTiles[Math.floor(Math.random() * availableRoadTiles.length)];
+            if(!availableRoadTiles2.length) return;
+            var tile = availableRoadTiles2[Math.floor(Math.random() * availableRoadTiles2.length)];
             var roadRand = Math.ceil(Math.random() * 4);
             var roadType;
 
@@ -92,8 +196,8 @@
 
             map[tile[1]][tile[0]] = roadType;
             renderMap();
-            var index = availableRoadTiles.indexOf(tile);
-            availableRoadTiles.splice(index, 1);
+            var index = availableRoadTiles2.indexOf(tile);
+            availableRoadTiles2.splice(index, 1);
             var nextTile;
             if(roadType == 1) {
                 if(map[tile[1]][tile[0]-1] == 0) nextTile = ([tile[0]-1,tile[1],1]);
@@ -120,24 +224,24 @@
                 else if(map[tile[1]-1][tile[0]] == 0) nextTile = ([tile[0],tile[1]-1,2]);
             }
             if(nextTile != null && (nextTile[0] < 0 || nextTile[1] < 0)) return;
-            if(nextTile) availableRoadTiles.push(nextTile);
+            if(nextTile) availableRoadTiles2.push(nextTile);
+        }
+
+        function drawBoard(){
+            var bw = 1664;
+            var bh = 960;
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgb(0,0,0)";
+            for (var x = 0; x < bw; x += 64) {
+                for (var y = 0; y < bh; y += 64) {
+                   ctx.strokeRect(x, y, 64, 64);
+                }
+            }
         }
 
         function renderMap(){
             ctx.clearRect(0,0,1664,960);
-            var bw = 1664;
-            // Box height
-            var bh = 960;
-            function drawBoard(){
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = "rgb(0,0,0)";
-                for (var x = 0; x < bw; x += 64) {
-                    for (var y = 0; y < bh; y += 64) {
-                       ctx.strokeRect(x, y, 64, 64);
-                    }
-                }
-            }
-        drawBoard();
+            drawBoard();
             for(var x=0;x<map[0].length;x++){
                 for(var y=0;y<map.length;y++){
                     if(map[y][x] == 1) ctx.drawImage(imgHorizontalRoad, x*64, y*64);
@@ -151,24 +255,61 @@
             }
         };
 
-        function addHouse(){
-            var x = Math.floor(Math.random() * 25); //column number
-            var y = Math.floor(Math.random() * 14); //row number
-            console.log(x + ", " + y);
-            if(map[y][x] != 0) {
-                addHouse();
-                return;
+        function getAvailableRoadTiles(map){
+            var availableRoadTiles = [];
+            var availableForThisTile = [];
+            for(var x=0;x<map[0].length;x++){
+                for(var y=0;y<map.length;y++){
+                    if(map[y][x] == 1){
+                        if(map[y][x-1] == 0) {
+                            availableForThisTile.push(1,5,6);
+                            if(map[y][x-2] == undefined || map[y][x-2] != 0) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 1});
+                            if(y == 0) availableForThisTile.filter(function(e) { return e !== 6});
+                            if(y == map.length) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 5});
+                            availableRoadTiles.push([x-1,y,availableForThisTile]);
+                        }
+                        if(map[y][x+1] == 0) {
+                            availableForThisTile.push(1,3,4);
+                            if(map[y][x+2] == undefined || map[y][x+2] != 0) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 1});
+                            if(y == 0) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 4});
+                            if(y == map.length) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 3});
+                            availableRoadTiles.push([x+1,y,availableForThisTile]);
+                        }
+                    }
+                    else if(map[y][x] == 2){
+                        if(map[y-1][x] == 0) {
+                            availableForThisTile.push(2,3,5);
+                            if(map[y-2][x] == undefined || map[y-2][x] != 0) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 2});
+                            if(x == 0) availableForThisTile.filter(function(e) { return e !== 3});
+                            if(x == map[0].length) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 5});
+                            availableRoadTiles.push([x,y-1,availableForThisTile]);
+                        }
+                        if(map[y+1][x] == 0) {
+                            availableForThisTile.push(2,4,6);
+                            if(map[y+2][x] == undefined || map[y+2][x] != 0) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 2});
+                            if(x == 0) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 4});
+                            if(x == map[0].length) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 6});
+                            availableRoadTiles.push([x,y+1,availableForThisTile]);
+                        }
+                    }
+                    else if(map[y][x] == 3){ //top left road
+                        if(map[y][x-1] == 0) {
+                            availableForThisTile.push(1,5,6);
+                            if(map[y][x-2] == undefined || map[y][x-2] != 0) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 1});
+                            if(y == 0) availableForThisTile.filter(function(e) { return e !== 6});
+                            if(map[y+1][x-1] != 0) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 5});
+                            availableRoadTiles.push([x-1,y,availableForThisTile]);
+                        }
+                        if(map[y+1][x] == 0) {
+                            availableForThisTile.push(2,4,6);
+                            if(map[y+2][x] == undefined || map[y+2][x] != 0) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 2});
+                            if(x == 0) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 4});
+                            if(x == map[0].length) availableForThisTile = availableForThisTile.filter(function(e) { return e !== 6});
+                            availableRoadTiles.push([x,y+1,availableForThisTile]);
+                        }
+                    }
+                }
             }
-            else map[y][x] = 7;
-            renderMap();
-        }
-        setInterval(function(){addRoad()}, 10);
+        }*/
     </script>
 </html>
-
-<!--
-    for(var i=1;i<=100;i++) {
-        document.getElementById('temp').innerText += "\t<td id=\"td" + i + "\"></td>\r\n";
-        if(i%10==0) document.getElementById('temp').innerText += "</tr>\r\n<tr>\r\n";
-    }
--->
