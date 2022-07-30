@@ -1,5 +1,6 @@
 var imgSmallHouse = new Image();
-var imgLargeHouse = new Image();
+var imgLargeHouseLeft = new Image();
+var imgLargeHouseRight = new Image();
 
 var imgHorizontalRoad = new Image();
 var imgVerticalRoad = new Image();
@@ -21,7 +22,8 @@ var imgIntersectionLeftRoad = new Image();
 var imgFourWayRoad = new Image();
 
 imgSmallHouse.src = "assets/buildings/smallHouse.png";
-imgLargeHouse.src = "assets/buildings/largeHouse.png";
+imgLargeHouseLeft.src = "assets/buildings/largeHouseLeft.png";
+imgLargeHouseRight.src = "assets/buildings/largeHouseRight.png";
 
 imgHorizontalRoad.src = "assets/roads/horizontalRoad.png"; //1
 imgVerticalRoad.src = "assets/roads/verticalRoad.png"; //2
@@ -107,7 +109,8 @@ function renderMap(){
                 else ctx.drawImage(imgRoadEnd, x*64, y*64);
             }
             else if(map[y][x] == 2) ctx.drawImage(imgSmallHouse, x*64, y*64);
-            else if(map[y][x] == 3) ctx.drawImage(imgLargeHouse, x*64, y*64);
+            else if(map[y][x] == 3) ctx.drawImage(imgLargeHouseLeft, x*64, y*64);
+            else if(map[y][x] == 4) ctx.drawImage(imgLargeHouseRight, x*64, y*64);
         }
     }
 }
@@ -116,7 +119,7 @@ function addRoadWithCoords(canvas, event) {
     const rect = canvas.getBoundingClientRect()
     const x = event.clientX - rect.left
     const y = event.clientY - rect.top
-    map[Math.floor(y/64)][Math.floor(x/64)] = 1;
+    if(map[Math.floor(y/64)][Math.floor(x/64)] == 0) map[Math.floor(y/64)][Math.floor(x/64)] = 1;
     renderMap();
 }
 
@@ -141,7 +144,10 @@ function addHouse(){
     }
     else {
         if(randHouse == 1) map[randY][randX] = 2;
-        else if(randHouse == 2) map[randY][randX] = 3;
+        else if(randHouse == 2) {
+            map[randY][randX] = 3;
+            map[randY][randX+1] = 4;
+        }
     }
     renderMap();
 }
