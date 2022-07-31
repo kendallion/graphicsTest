@@ -1,6 +1,8 @@
 var imgSmallHouse = new Image();
 var imgLargeHouseLeft = new Image();
 var imgLargeHouseRight = new Image();
+var imgSmithyLeft = new Image();
+var imgSmithyRight = new Image();
 
 var imgHorizontalRoad = new Image();
 var imgVerticalRoad = new Image();
@@ -24,6 +26,8 @@ var imgFourWayRoad = new Image();
 imgSmallHouse.src = "assets/buildings/smallHouse.png";
 imgLargeHouseLeft.src = "assets/buildings/largeHouseLeft.png";
 imgLargeHouseRight.src = "assets/buildings/largeHouseRight.png";
+imgSmithyLeft.src = "assets/buildings/smithyLeft.png";
+imgSmithyRight.src = "assets/buildings/smithyRight.png";
 
 imgHorizontalRoad.src = "assets/roads/horizontalRoad.png"; //1
 imgVerticalRoad.src = "assets/roads/verticalRoad.png"; //2
@@ -73,7 +77,7 @@ function drawBoard(){
     ctx.strokeStyle = "rgb(0,0,0)";
     for (var x = 0; x < bw; x += 64) {
         for (var y = 0; y < bh; y += 64) {
-           ctx.strokeRect(x, y, 64, 64);
+            ctx.strokeRect(x, y, 64, 64);
         }
     }
 }
@@ -111,6 +115,8 @@ function renderMap(){
             else if(map[y][x] == 2) ctx.drawImage(imgSmallHouse, x*64, y*64);
             else if(map[y][x] == 3) ctx.drawImage(imgLargeHouseLeft, x*64, y*64);
             else if(map[y][x] == 4) ctx.drawImage(imgLargeHouseRight, x*64, y*64);
+            else if(map[y][x] == 5) ctx.drawImage(imgSmithyLeft, x*64, y*64);
+            else if(map[y][x] == 6) ctx.drawImage(imgSmithyRight, x*64, y*64);
         }
     }
 }
@@ -137,8 +143,8 @@ function addRoadRandom(){
 function addHouse(){
     var randX = Math.floor(Math.random() * map[0].length);
     var randY = Math.floor(Math.random() * map.length);
-    var randHouse = Math.ceil(Math.random() * 2);
-    if(map[randY][randX] != 0) {
+    var randHouse = Math.ceil(Math.random() * 3);
+    if(map[randY][randX] != 0 || map[randY][randX+1] != 0) {
         addHouse();
         return;
     }
@@ -147,6 +153,10 @@ function addHouse(){
         else if(randHouse == 2) {
             map[randY][randX] = 3;
             map[randY][randX+1] = 4;
+        }
+        else if(randHouse == 3) {
+            map[randY][randX] = 5;
+            map[randY][randX+1] = 6;
         }
     }
     renderMap();
