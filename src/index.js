@@ -1,4 +1,6 @@
-var imgSmallHouse = new Image();
+var imgSmallHouse1 = new Image();
+var imgSmallHouse2 = new Image();
+var imgSmallHouse3 = new Image();
 var imgLargeHouseLeft = new Image();
 var imgLargeHouseRight = new Image();
 var imgSmithyLeft = new Image();
@@ -23,7 +25,9 @@ var imgIntersectionBottomRoad = new Image();
 var imgIntersectionLeftRoad = new Image();
 var imgFourWayRoad = new Image();
 
-imgSmallHouse.src = "assets/buildings/smallHouse.png";
+imgSmallHouse1.src = "assets/buildings/smallHouse1.png";
+imgSmallHouse2.src = "assets/buildings/smallHouse2.png";
+imgSmallHouse3.src = "assets/buildings/smallHouse3.png";
 imgLargeHouseLeft.src = "assets/buildings/largeHouseLeft.png";
 imgLargeHouseRight.src = "assets/buildings/largeHouseRight.png";
 imgSmithyLeft.src = "assets/buildings/smithyLeft.png";
@@ -77,7 +81,7 @@ function drawBoard(){
     ctx.strokeStyle = "rgb(0,0,0)";
     for (var x = 0; x < bw; x += 64) {
         for (var y = 0; y < bh; y += 64) {
-            ctx.strokeRect(x, y, 64, 64);
+            //ctx.strokeRect(x, y, 64, 64);
         }
     }
 }
@@ -112,11 +116,13 @@ function renderMap(){
                 else if(roadType == 15) ctx.drawImage(imgFourWayRoad, x*64, y*64);
                 else ctx.drawImage(imgRoadEnd, x*64, y*64);
             }
-            else if(map[y][x] == 2) ctx.drawImage(imgSmallHouse, x*64, y*64);
-            else if(map[y][x] == 3) ctx.drawImage(imgLargeHouseLeft, x*64, y*64);
-            else if(map[y][x] == 4) ctx.drawImage(imgLargeHouseRight, x*64, y*64);
-            else if(map[y][x] == 5) ctx.drawImage(imgSmithyLeft, x*64, y*64);
-            else if(map[y][x] == 6) ctx.drawImage(imgSmithyRight, x*64, y*64);
+            else if(map[y][x] == 2) ctx.drawImage(imgSmallHouse1, x*64, y*64);
+            else if(map[y][x] == 3) ctx.drawImage(imgSmallHouse2, x*64, y*64);
+            else if(map[y][x] == 4) ctx.drawImage(imgSmallHouse3, x*64, y*64);
+            else if(map[y][x] == 5) ctx.drawImage(imgLargeHouseLeft, x*64, y*64);
+            else if(map[y][x] == 6) ctx.drawImage(imgLargeHouseRight, x*64, y*64);
+            else if(map[y][x] == 11) ctx.drawImage(imgSmithyLeft, x*64, y*64);
+            else if(map[y][x] == 12) ctx.drawImage(imgSmithyRight, x*64, y*64);
         }
     }
 }
@@ -143,20 +149,22 @@ function addRoadRandom(){
 function addHouse(){
     var randX = Math.floor(Math.random() * map[0].length);
     var randY = Math.floor(Math.random() * map.length);
-    var randHouse = Math.ceil(Math.random() * 3);
+    var randHouse = Math.ceil(Math.random() * 5);
     if(map[randY][randX] != 0 || map[randY][randX+1] != 0) {
         addHouse();
         return;
     }
     else {
         if(randHouse == 1) map[randY][randX] = 2;
-        else if(randHouse == 2) {
-            map[randY][randX] = 3;
-            map[randY][randX+1] = 4;
-        }
-        else if(randHouse == 3) {
+        else if(randHouse == 2) map[randY][randX] = 3;
+        else if(randHouse == 3) map[randY][randX] = 4;
+        else if(randHouse == 4) {
             map[randY][randX] = 5;
             map[randY][randX+1] = 6;
+        }
+        else if(randHouse == 5) {
+            map[randY][randX] = 11;
+            map[randY][randX+1] = 12;
         }
     }
     renderMap();
