@@ -1,3 +1,5 @@
+var currentElement = 0;
+
 var imgSmallHouse1 = new Image();
 var imgSmallHouse2 = new Image();
 var imgSmallHouse3 = new Image();
@@ -54,9 +56,30 @@ imgFourWayRoad.src = "assets/roads/fourWay.png";
 
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
-c.addEventListener('mousedown', function(e) {
-    addRoadWithCoords(c, e)
+
+var tempX;
+var tempY;
+
+c.addEventListener('mousemove', function(e) {
+    if(currentElement == 0) return;
+    const rect = c.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    if(tempY && tempX) {
+         map[Math.floor(tempY/64)][Math.floor(tempX/64)] = 0;
+    }
+    if(map[Math.floor(y/64)][Math.floor(x/64)] == 0){
+        map[Math.floor(y/64)][Math.floor(x/64)] = currentElement * 100;
+        tempX = x;
+        tempY = y;
+    }
+    renderMap();
 });
+
+c.addEventListener('mousedown', function(e) {
+    addMapElement(c, e)
+});
+
 var map = [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -81,7 +104,7 @@ function drawBoard(){
     ctx.strokeStyle = "rgb(0,0,0)";
     for (var x = 0; x < bw; x += 64) {
         for (var y = 0; y < bh; y += 64) {
-            //ctx.strokeRect(x, y, 64, 64);
+            ctx.strokeRect(x, y, 64, 64);
         }
     }
 }
@@ -123,18 +146,46 @@ function renderMap(){
             else if(map[y][x] == 6) ctx.drawImage(imgLargeHouseRight, x*64, y*64);
             else if(map[y][x] == 11) ctx.drawImage(imgSmithyLeft, x*64, y*64);
             else if(map[y][x] == 12) ctx.drawImage(imgSmithyRight, x*64, y*64);
+
+            else if(map[y][x] == 200) drawOpaque(imgSmallHouse1, x, y)
+            else if(map[y][x] == 300) drawOpaque(imgSmallHouse2, x, y)
+            else if(map[y][x] == 400) drawOpaque(imgSmallHouse3, x, y)
         }
     }
 }
 
+function drawOpaque(image, x, y) {
+    ctx.globalAlpha = 0.4;
+    ctx.drawImage(image, x*64, y*64);
+    ctx.globalAlpha = 1.0;
+}
+function setCurrentElement(id) {
+    currentElement = id;
+}
+function addMapElement(canvas, event) {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    if(map[Math.floor(y/64)][Math.floor(x/64)] >= 100){
+        map[Math.floor(y/64)][Math.floor(x/64)] = currentElement;
+        currentElement = 0;
+        tempX = null;
+        tempY = null;
+    }
+    else if(currentElement == 0){
+        map[Math.floor(y/64)][Math.floor(x/64)] = 1;
+    }
+    renderMap();
+}
 function addRoadWithCoords(canvas, event) {
-    const rect = canvas.getBoundingClientRect()
-    const x = event.clientX - rect.left
-    const y = event.clientY - rect.top
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
     if(map[Math.floor(y/64)][Math.floor(x/64)] == 0) map[Math.floor(y/64)][Math.floor(x/64)] = 1;
     renderMap();
 }
 
+/*
 function addRoadRandom(){
     var randX = Math.floor(Math.random() * map[0].length);
     var randY = Math.floor(Math.random() * map.length);
@@ -146,12 +197,12 @@ function addRoadRandom(){
     renderMap();
 }
 
-function addHouse(){
+function addHouseRandom(){
     var randX = Math.floor(Math.random() * map[0].length);
     var randY = Math.floor(Math.random() * map.length);
     var randHouse = Math.ceil(Math.random() * 5);
     if(map[randY][randX] != 0 || map[randY][randX+1] != 0) {
-        addHouse();
+        addHouseRandom();
         return;
     }
     else {
@@ -169,3 +220,4 @@ function addHouse(){
     }
     renderMap();
 }
+*/
