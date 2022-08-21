@@ -3,10 +3,19 @@ var currentElement = 0;
 var imgSmallHouse1 = new Image();
 var imgSmallHouse2 = new Image();
 var imgSmallHouse3 = new Image();
+
+var imgMarket = new Image();
+
 var imgLargeHouseLeft = new Image();
 var imgLargeHouseRight = new Image();
 var imgSmithyLeft = new Image();
 var imgSmithyRight = new Image();
+var imgBarracks1Left = new Image();
+var imgBarracks1Right = new Image();
+var imgBarracks2Left = new Image();
+var imgBarracks2Right = new Image();
+var imgBarracks3Left = new Image();
+var imgBarracks3Right = new Image();
 
 var imgHorizontalRoad = new Image();
 var imgVerticalRoad = new Image();
@@ -30,10 +39,21 @@ var imgFourWayRoad = new Image();
 imgSmallHouse1.src = "assets/buildings/smallHouse1.png";
 imgSmallHouse2.src = "assets/buildings/smallHouse2.png";
 imgSmallHouse3.src = "assets/buildings/smallHouse3.png";
+
+imgMarket.src = "assets/buildings/market.png";
+
 imgLargeHouseLeft.src = "assets/buildings/largeHouseLeft.png";
 imgLargeHouseRight.src = "assets/buildings/largeHouseRight.png";
+
 imgSmithyLeft.src = "assets/buildings/smithyLeft.png";
 imgSmithyRight.src = "assets/buildings/smithyRight.png";
+imgBarracks1Left.src = "assets/buildings/barracks1Left.png";
+imgBarracks1Right.src = "assets/buildings/barracks1Right.png";
+imgBarracks2Left.src = "assets/buildings/barracks2Left.png";
+imgBarracks2Right.src = "assets/buildings/barracks2Right.png";
+imgBarracks3Left.src = "assets/buildings/barracks3Left.png";
+imgBarracks3Right.src = "assets/buildings/barracks3Right.png";
+imgMarket.src = "assets/buildings/market.png";
 
 imgHorizontalRoad.src = "assets/roads/horizontalRoad.png"; //1
 imgVerticalRoad.src = "assets/roads/verticalRoad.png"; //2
@@ -59,20 +79,33 @@ var ctx = c.getContext("2d");
 
 var tempX;
 var tempY;
+var twoWide;
 
 c.addEventListener('mousemove', function(e) {
     if(currentElement == 0) return;
     const rect = c.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    if(tempY && tempX) {
+    if(tempY && tempX && !twoWide) {
          map[Math.floor(tempY/64)][Math.floor(tempX/64)] = 0;
     }
-    if(map[Math.floor(y/64)][Math.floor(x/64)] == 0){
+    else if(tempY && tempX && twoWide) {
+         map[Math.floor(tempY/64)][Math.floor(tempX/64)] = 0;
+         map[Math.floor(tempY/64)][Math.floor(tempX/64) + 1] = 0;
+    }
+    if(map[Math.floor(y/64)][Math.floor(x/64)] == 0 && !twoWide){
         map[Math.floor(y/64)][Math.floor(x/64)] = currentElement * 100;
         tempX = x;
         tempY = y;
     }
+    else if(twoWide &&
+            map[Math.floor(y/64)][Math.floor(x/64)] == 0 &&
+            map[Math.floor(y/64)][Math.floor(x/64) + 1] == 0){
+                map[Math.floor(y/64)][Math.floor(x/64)] = currentElement * 100;
+                map[Math.floor(y/64)][Math.floor(x/64) + 1] = (currentElement + 1) * 100;
+                tempX = x;
+                tempY = y;
+            }
     renderMap();
 });
 
@@ -81,25 +114,22 @@ c.addEventListener('mousedown', function(e) {
 });
 
 var map = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ];
 function drawBoard(){
-    var bw = 1664;
-    var bh = 960;
+    var bw = 1408;
+    var bh = 768;
     ctx.lineWidth = 2;
     ctx.strokeStyle = "rgb(0,0,0)";
     for (var x = 0; x < bw; x += 64) {
@@ -111,7 +141,7 @@ function drawBoard(){
 renderMap();
 
 function renderMap(){
-    ctx.clearRect(0,0,1664,960);
+    ctx.clearRect(0,0,1408,768);
     drawBoard();
     for(var x=0;x<map[0].length;x++){
         for(var y=0;y<map.length;y++){
@@ -142,14 +172,35 @@ function renderMap(){
             else if(map[y][x] == 2) ctx.drawImage(imgSmallHouse1, x*64, y*64);
             else if(map[y][x] == 3) ctx.drawImage(imgSmallHouse2, x*64, y*64);
             else if(map[y][x] == 4) ctx.drawImage(imgSmallHouse3, x*64, y*64);
-            else if(map[y][x] == 5) ctx.drawImage(imgLargeHouseLeft, x*64, y*64);
-            else if(map[y][x] == 6) ctx.drawImage(imgLargeHouseRight, x*64, y*64);
+
+            else if(map[y][x] == 5) ctx.drawImage(imgMarket, x*64, y*64);
+
             else if(map[y][x] == 11) ctx.drawImage(imgSmithyLeft, x*64, y*64);
             else if(map[y][x] == 12) ctx.drawImage(imgSmithyRight, x*64, y*64);
+            else if(map[y][x] == 13) ctx.drawImage(imgBarracks1Left, x*64, y*64);
+            else if(map[y][x] == 14) ctx.drawImage(imgBarracks1Right, x*64, y*64);
+            else if(map[y][x] == 15) ctx.drawImage(imgBarracks2Left, x*64, y*64);
+            else if(map[y][x] == 16) ctx.drawImage(imgBarracks2Right, x*64, y*64);
+            else if(map[y][x] == 17) ctx.drawImage(imgBarracks3Left, x*64, y*64);
+            else if(map[y][x] == 18) ctx.drawImage(imgBarracks3Right, x*64, y*64);
+            else if(map[y][x] == 19) ctx.drawImage(imgLargeHouseLeft, x*64, y*64);
+            else if(map[y][x] == 20) ctx.drawImage(imgLargeHouseRight, x*64, y*64);
 
-            else if(map[y][x] == 200) drawOpaque(imgSmallHouse1, x, y)
-            else if(map[y][x] == 300) drawOpaque(imgSmallHouse2, x, y)
-            else if(map[y][x] == 400) drawOpaque(imgSmallHouse3, x, y)
+            else if(map[y][x] == 200) drawOpaque(imgSmallHouse1, x, y);
+            else if(map[y][x] == 300) drawOpaque(imgSmallHouse2, x, y);
+            else if(map[y][x] == 400) drawOpaque(imgSmallHouse3, x, y);
+            else if(map[y][x] == 500) drawOpaque(imgMarket, x, y);
+
+            else if(map [y][x] == 1100) drawOpaque(imgSmithyLeft, x, y);
+            else if(map [y][x] == 1200) drawOpaque(imgSmithyRight, x, y);
+            else if(map [y][x] == 1300) drawOpaque(imgBarracks1Left, x, y);
+            else if(map [y][x] == 1400) drawOpaque(imgBarracks1Right, x, y);
+            else if(map [y][x] == 1500) drawOpaque(imgBarracks2Left, x, y);
+            else if(map [y][x] == 1600) drawOpaque(imgBarracks2Right, x, y);
+            else if(map [y][x] == 1700) drawOpaque(imgBarracks3Left, x, y);
+            else if(map [y][x] == 1800) drawOpaque(imgBarracks3Right, x, y);
+            else if(map[y][x] == 1900) drawOpaque(imgLargeHouseLeft, x, y);
+            else if(map[y][x] == 2000) drawOpaque(imgLargeHouseRight, x, y);
         }
     }
 }
@@ -161,16 +212,28 @@ function drawOpaque(image, x, y) {
 }
 function setCurrentElement(id) {
     currentElement = id;
+    if(id > 9 && id < 100) twoWide = true;
+    else twoWide = false;
 }
 function addMapElement(canvas, event) {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    if(map[Math.floor(y/64)][Math.floor(x/64)] >= 100){
+    if(!twoWide && map[Math.floor(y/64)][Math.floor(x/64)] >= 100){
         map[Math.floor(y/64)][Math.floor(x/64)] = currentElement;
         currentElement = 0;
         tempX = null;
         tempY = null;
+    }
+    else if(twoWide &&
+            map[Math.floor(y/64)][Math.floor(x/64)] >= 100 &&
+            map[Math.floor(y/64)][Math.floor(x/64) + 1] >= 100){
+        map[Math.floor(y/64)][Math.floor(x/64)] = currentElement;
+        map[Math.floor(y/64)][Math.floor(x/64) + 1] = currentElement + 1;
+        currentElement = 0;
+        tempX = null;
+        tempY = null;
+        twoWide = null;
     }
     else if(currentElement == 0){
         map[Math.floor(y/64)][Math.floor(x/64)] = 1;
